@@ -1,0 +1,40 @@
+/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */
+export default {
+  endOfLine: 'auto',
+  importOrder: [
+    '^(react(/.*)?)$',
+    '^(react-dom(/.*)?)$',
+    '',
+    '<THIRD_PARTY_MODULES>',
+    '',
+    '^~/app/(.*)$',
+    '',
+    '^~/pages/(.*)$',
+    '',
+    '^~/widgets/(.*)$',
+    '',
+    '^~/features/(.*)$',
+    '',
+    '^~/entities/(.*)$',
+    '',
+    '^~/shared/(.*)$',
+    '',
+    '^[.]',
+  ],
+  importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
+  overrides: [
+    {
+      files: '*.md',
+      options: {
+        printWidth: Infinity,
+      },
+    },
+  ],
+  plugins: ['@ianvs/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss'],
+  printWidth: 120,
+  semi: false,
+  singleQuote: true,
+  tailwindAttributes: ['classNames', 'containerClassName', 'labelClassName'],
+  tailwindFunctions: ['classNames', 'cn', 'cva'],
+  tailwindStylesheet: './src/app/styles/index.css',
+}

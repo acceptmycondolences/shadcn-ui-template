@@ -1,0 +1,55 @@
+import * as React from 'react'
+
+import { Popover as PopoverPrimitive } from 'radix-ui'
+
+import { classNames } from '~/shared/lib'
+
+function Popover({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
+  return <PopoverPrimitive.Root data-slot="popover" {...props} />
+}
+
+function PopoverAnchor({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
+  return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />
+}
+
+function PopoverContent({
+  align = 'center',
+  className,
+  sideOffset = 4,
+  ...props
+}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+  return (
+    <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Content
+        align={align}
+        className={classNames(
+          'z-50 flex w-72 origin-(--radix-popover-content-transform-origin) flex-col gap-4 rounded-3xl bg-popover p-4 text-sm text-popover-foreground shadow-lg ring-1 ring-foreground/5 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:ring-foreground/10 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
+          className,
+        )}
+        data-slot="popover-content"
+        sideOffset={sideOffset}
+        {...props}
+      />
+    </PopoverPrimitive.Portal>
+  )
+}
+
+function PopoverDescription({ className, ...props }: React.ComponentProps<'p'>) {
+  return <p className={classNames('text-muted-foreground', className)} data-slot="popover-description" {...props} />
+}
+
+function PopoverHeader({ className, ...props }: React.ComponentProps<'div'>) {
+  return <div className={classNames('flex flex-col gap-1 text-sm', className)} data-slot="popover-header" {...props} />
+}
+
+function PopoverTitle({ className, ...props }: React.ComponentProps<'h2'>) {
+  return (
+    <div className={classNames('font-heading text-base font-medium', className)} data-slot="popover-title" {...props} />
+  )
+}
+
+function PopoverTrigger({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
+  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
+}
+
+export { Popover, PopoverAnchor, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitle, PopoverTrigger }
