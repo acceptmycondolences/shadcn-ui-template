@@ -213,4 +213,5 @@ export {
   FieldSeparator,
   FieldSet,
   FieldTitle,
+  fieldVariants,
 }
