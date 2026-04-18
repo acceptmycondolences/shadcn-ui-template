@@ -25,6 +25,14 @@ export interface FormBaseProps<
   orientation?: VariantProps<typeof fieldVariants>['orientation']
 }
 
+export interface FormComboboxProps {
+  emptyLabel: string
+  groups: SelectGroupItem[]
+  searchPlaceholder: string
+  size?: 'default' | 'sm'
+  triggerPlaceholder: string
+}
+
 export type FormComponentProps<
   TElementType extends ElementType,
   TFieldValues extends FieldValues = FieldValues,

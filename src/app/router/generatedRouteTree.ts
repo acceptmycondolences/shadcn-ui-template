@@ -9,9 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './../routes/__root'
+import { Route as AuthenticationRouteImport } from './../routes/_authentication'
 import { Route as AuthenticatedRouteImport } from './../routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './../routes/_authenticated/index'
-import { Route as AuthenticationRouteImport } from './../routes/_authentication'
 import { Route as AuthenticationLoginRouteImport } from './../routes/_authentication/login'
 
 const AuthenticationRoute = AuthenticationRouteImport.update({
@@ -53,7 +53,12 @@ export interface FileRouteTypes {
   fullPaths: '/' | '/login'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/login'
-  id: '__root__' | '/_authenticated' | '/_authentication' | '/_authentication/login' | '/_authenticated/'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/_authentication'
+    | '/_authentication/login'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -102,7 +107,9 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 
-const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(AuthenticatedRouteChildren)
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
 
 interface AuthenticationRouteChildren {
   AuthenticationLoginRoute: typeof AuthenticationLoginRoute
@@ -112,10 +119,14 @@ const AuthenticationRouteChildren: AuthenticationRouteChildren = {
   AuthenticationLoginRoute: AuthenticationLoginRoute,
 }
 
-const AuthenticationRouteWithChildren = AuthenticationRoute._addFileChildren(AuthenticationRouteChildren)
+const AuthenticationRouteWithChildren = AuthenticationRoute._addFileChildren(
+  AuthenticationRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthenticationRoute: AuthenticationRouteWithChildren,
 }
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
