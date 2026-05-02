@@ -13,19 +13,19 @@ import type {
 import type { SelectGroupItem } from '~/shared/lib'
 import type { fieldVariants } from '~/shared/ui'
 
-export interface FormBaseProps<
+export interface FormBaseFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
   TTransformedValues = TFieldValues,
 > {
-  control: Control<TFieldValues, unknown, TTransformedValues>
+  control: Control<TFieldValues, TTransformedValues>
   description?: ReactNode
   label: ReactNode
   name: TName
   orientation?: VariantProps<typeof fieldVariants>['orientation']
 }
 
-export interface FormComboboxProps {
+export interface FormComboboxFieldProps {
   emptyLabel: string
   groups: SelectGroupItem[]
   searchPlaceholder: string
@@ -38,32 +38,33 @@ export type FormComponentProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
   TTransformedValues = TFieldValues,
-> = FormBaseProps<TFieldValues, TName, TTransformedValues> & Omit<ComponentPropsWithoutRef<TElementType>, 'name'>
+> = FormBaseFieldProps<TFieldValues, TName, TTransformedValues> & Omit<ComponentPropsWithoutRef<TElementType>, 'name'>
+
+export interface FormContainerFieldProps {
+  containerChildren?: ReactNode
+  containerClassName?: string
+}
 
 export type FormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
   TTransformedValues = TFieldValues,
-> = FormBaseProps<TFieldValues, TName, TTransformedValues> & {
-  children: (props: {
-    field: ControllerRenderProps<TFieldValues, TName>
-    fieldState: ControllerFieldState
-    formState: UseFormStateReturn<TFieldValues>
-    id: string
-  }) => ReactNode
+> = FormBaseFieldProps<TFieldValues, TName, TTransformedValues> & {
+  children: (props: FormFieldRenderProps<TFieldValues, TName>) => ReactNode
 }
 
-export interface FormInputProps {
-  containerChildren?: ReactNode
-  containerClassName?: string
+export interface FormFieldRenderProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> {
+  field: ControllerRenderProps<TFieldValues, TName>
+  fieldState: ControllerFieldState
+  formState: UseFormStateReturn<TFieldValues>
+  inputId: string
+  labelId: string
 }
 
-export interface FormSelectProps {
+export interface FormSelectFieldProps {
   groups: SelectGroupItem[]
   placeholder?: string
-}
-
-export interface FormTextareaProps {
-  containerChildren?: ReactNode
-  containerClassName?: string
 }

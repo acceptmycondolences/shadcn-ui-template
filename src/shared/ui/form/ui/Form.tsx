@@ -28,12 +28,11 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-  type FormComboboxProps,
+  type FormComboboxFieldProps,
   type FormComponentProps,
+  type FormContainerFieldProps,
   type FormFieldProps,
-  type FormInputProps,
-  type FormSelectProps,
-  type FormTextareaProps,
+  type FormSelectFieldProps,
 } from '~/shared/ui'
 
 export function FormComboboxField<
@@ -53,13 +52,13 @@ export function FormComboboxField<
   size = 'default',
   triggerPlaceholder,
   ...props
-}: FormComboboxProps & FormComponentProps<'button', TFieldValues, TName, TTransformedValues>) {
+}: FormComboboxFieldProps & FormComponentProps<'button', TFieldValues, TName, TTransformedValues>) {
   const [open, setOpen] = useState(false)
 
   return (
     <FormField control={control} description={description} label={label} name={name} orientation={orientation}>
-      {({ field, fieldState, id }) => {
-        const selectedValues: string[] = Array.isArray(field.value) ? field.value : []
+      {({ field, fieldState, inputId, labelId }) => {
+        const selectedValues: string[] = field.value ?? []
 
         const allOptions = groups.flatMap((group) => group.options)
 
@@ -86,9 +85,8 @@ export function FormComboboxField<
           <Popover onOpenChange={setOpen} open={open}>
             <PopoverTrigger asChild>
               <button
-                aria-expanded={open}
                 aria-invalid={fieldState.invalid}
-                aria-labelledby={id}
+                aria-labelledby={labelId}
                 className={classNames(
                   "flex w-fit items-center justify-between gap-1.5 rounded-3xl border border-transparent bg-input/50 px-3 py-2 text-sm whitespace-nowrap transition-[color,box-shadow,background-color] outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-[size=default]:h-9 data-[size=sm]:h-8 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
                   lastLabel ? 'line-clamp-1 flex items-center gap-1.5' : 'text-muted-foreground',
@@ -96,7 +94,7 @@ export function FormComboboxField<
                 )}
                 data-size={size}
                 data-slot="combobox-trigger"
-                id={id}
+                id={inputId}
                 onBlur={field.onBlur}
                 ref={field.ref}
                 role="combobox"
@@ -148,7 +146,8 @@ export function FormField<
   name,
   orientation = 'vertical',
 }: FormFieldProps<TFieldValues, TName, TTransformedValues>) {
-  const id = useId()
+  const inputId = useId()
+  const labelId = useId()
 
   return (
     <Controller
@@ -156,15 +155,18 @@ export function FormField<
       name={name}
       render={({ field, fieldState, formState }) => (
         <Field data-invalid={fieldState.invalid} orientation={orientation}>
-          <FieldLabel htmlFor={id}>{label}</FieldLabel>
+          <FieldLabel htmlFor={inputId} id={labelId}>
+            {label}
+          </FieldLabel>
           {children({
             field,
             fieldState,
             formState,
-            id,
+            inputId,
+            labelId,
           })}
           {description && <FieldDescription>{description}</FieldDescription>}
-          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          {fieldState.error && <FieldError errors={[fieldState.error]} />}
         </Field>
       )}
     />
@@ -185,15 +187,15 @@ export function FormInputField<
   name,
   orientation,
   ...props
-}: FormComponentProps<typeof InputGroupInput, TFieldValues, TName, TTransformedValues> & FormInputProps) {
+}: FormComponentProps<typeof InputGroupInput, TFieldValues, TName, TTransformedValues> & FormContainerFieldProps) {
   return (
     <FormField control={control} description={description} label={label} name={name} orientation={orientation}>
-      {({ field, fieldState, id }) => (
+      {({ field, fieldState, inputId }) => (
         <InputGroup className={containerClassName}>
           <InputGroupInput
             aria-invalid={fieldState.invalid}
             autoComplete={autoComplete}
-            id={id}
+            id={inputId}
             {...field}
             {...props}
           />
@@ -217,15 +219,15 @@ export function FormSelectField<
   orientation,
   placeholder,
   ...props
-}: FormComponentProps<typeof SelectTrigger, TFieldValues, TName, TTransformedValues> & FormSelectProps) {
+}: FormComponentProps<typeof SelectTrigger, TFieldValues, TName, TTransformedValues> & FormSelectFieldProps) {
   return (
     <FormField control={control} description={description} label={label} name={name} orientation={orientation}>
-      {({ field, fieldState, id }) => (
-        <Select disabled={field.disabled} name={field.name} onValueChange={field.onChange} value={field.value ?? ''}>
+      {({ field, fieldState, inputId, labelId }) => (
+        <Select name={field.name} onValueChange={field.onChange} value={field.value ?? ''}>
           <SelectTrigger
             aria-invalid={fieldState.invalid}
-            aria-labelledby={id}
-            id={id}
+            aria-labelledby={labelId}
+            id={inputId}
             onBlur={field.onBlur}
             ref={field.ref}
             {...props}
@@ -263,12 +265,12 @@ export function FormTextareaField<
   name,
   orientation,
   ...props
-}: FormComponentProps<typeof InputGroupTextarea, TFieldValues, TName, TTransformedValues> & FormTextareaProps) {
+}: FormComponentProps<typeof InputGroupTextarea, TFieldValues, TName, TTransformedValues> & FormContainerFieldProps) {
   return (
     <FormField control={control} description={description} label={label} name={name} orientation={orientation}>
-      {({ field, fieldState, id }) => (
+      {({ field, fieldState, inputId }) => (
         <InputGroup className={containerClassName}>
-          <InputGroupTextarea aria-invalid={fieldState.invalid} id={id} {...field} {...props} />
+          <InputGroupTextarea aria-invalid={fieldState.invalid} id={inputId} {...field} {...props} />
           {containerChildren}
         </InputGroup>
       )}
