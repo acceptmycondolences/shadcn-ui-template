@@ -13,6 +13,21 @@ import type {
 import type { SelectGroupItem } from '~/shared/lib'
 import type { fieldVariants } from '~/shared/ui'
 
+export type ControlledFieldProp =
+  | 'aria-describedby'
+  | 'aria-invalid'
+  | 'aria-labelledby'
+  | 'checked'
+  | 'defaultChecked'
+  | 'defaultValue'
+  | 'id'
+  | 'name'
+  | 'onBlur'
+  | 'onChange'
+  | 'onCheckedChange'
+  | 'ref'
+  | 'value'
+
 export interface FormBaseFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -20,6 +35,7 @@ export interface FormBaseFieldProps<
 > {
   control: Control<TFieldValues, TTransformedValues>
   description?: ReactNode
+  disabled?: boolean
   label: ReactNode
   name: TName
   orientation?: VariantProps<typeof fieldVariants>['orientation']
@@ -38,7 +54,8 @@ export type FormComponentProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
   TTransformedValues = TFieldValues,
-> = FormBaseFieldProps<TFieldValues, TName, TTransformedValues> & Omit<ComponentPropsWithoutRef<TElementType>, 'name'>
+> = FormBaseFieldProps<TFieldValues, TName, TTransformedValues> &
+  Omit<ComponentPropsWithoutRef<TElementType>, ControlledFieldProp>
 
 export interface FormContainerFieldProps {
   containerChildren?: ReactNode
@@ -57,6 +74,10 @@ export interface FormFieldRenderProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > {
+  describedBy?: string
+  descriptionId: string
+  disabled?: boolean
+  errorId: string
   field: ControllerRenderProps<TFieldValues, TName>
   fieldState: ControllerFieldState
   formState: UseFormStateReturn<TFieldValues>
