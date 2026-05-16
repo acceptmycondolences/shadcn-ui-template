@@ -1,7 +1,7 @@
 import { useId, useState } from 'react'
 
 import { IconSelector } from '@tabler/icons-react'
-import { Controller, type FieldPath, type FieldValues } from 'react-hook-form'
+import { Controller, type FieldPath, type FieldPathByValue, type FieldValues } from 'react-hook-form'
 
 import { classNames } from '~/shared/lib'
 import {
@@ -37,12 +37,13 @@ import {
 
 export function FormComboboxField<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPathByValue<TFieldValues, string[]> = FieldPathByValue<TFieldValues, string[]>,
   TTransformedValues = TFieldValues,
 >({
   className,
   control,
   description,
+  disabled,
   emptyLabel,
   groups,
   label,
@@ -56,8 +57,15 @@ export function FormComboboxField<
   const [open, setOpen] = useState(false)
 
   return (
-    <FormField control={control} description={description} label={label} name={name} orientation={orientation}>
-      {({ field, fieldState, inputId, labelId }) => {
+    <FormField
+      control={control}
+      description={description}
+      disabled={disabled}
+      label={label}
+      name={name}
+      orientation={orientation}
+    >
+      {({ describedBy, disabled: fieldDisabled, field, fieldState, inputId, labelId }) => {
         const selectedValues: string[] = field.value ?? []
 
         const allOptions = groups.flatMap((group) => group.options)
@@ -85,6 +93,7 @@ export function FormComboboxField<
           <Popover onOpenChange={setOpen} open={open}>
             <PopoverTrigger asChild>
               <button
+                aria-describedby={describedBy}
                 aria-invalid={fieldState.invalid}
                 aria-labelledby={labelId}
                 className={classNames(
@@ -94,6 +103,7 @@ export function FormComboboxField<
                 )}
                 data-size={size}
                 data-slot="combobox-trigger"
+                disabled={fieldDisabled}
                 id={inputId}
                 onBlur={field.onBlur}
                 ref={field.ref}
@@ -142,33 +152,46 @@ export function FormField<
   children,
   control,
   description,
+  disabled,
   label,
   name,
   orientation = 'vertical',
 }: FormFieldProps<TFieldValues, TName, TTransformedValues>) {
   const inputId = useId()
   const labelId = useId()
+  const descriptionId = useId()
+  const errorId = useId()
 
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field, fieldState, formState }) => (
-        <Field data-invalid={fieldState.invalid} orientation={orientation}>
-          <FieldLabel htmlFor={inputId} id={labelId}>
-            {label}
-          </FieldLabel>
-          {children({
-            field,
-            fieldState,
-            formState,
-            inputId,
-            labelId,
-          })}
-          {description && <FieldDescription>{description}</FieldDescription>}
-          {fieldState.error && <FieldError errors={[fieldState.error]} />}
-        </Field>
-      )}
+      render={({ field, fieldState, formState }) => {
+        const describedBy = [description ? descriptionId : null, fieldState.error ? errorId : null]
+          .filter(Boolean)
+          .join(' ')
+
+        const fieldDisabled = disabled ?? field.disabled
+
+        return (
+          <Field data-disabled={fieldDisabled} data-invalid={fieldState.invalid} orientation={orientation}>
+            <FieldLabel htmlFor={inputId} id={labelId}>
+              {label}
+            </FieldLabel>
+            {children({
+              describedBy: describedBy || undefined,
+              disabled: fieldDisabled,
+              field,
+              fieldState,
+              formState,
+              inputId,
+              labelId,
+            })}
+            {description && <FieldDescription id={descriptionId}>{description}</FieldDescription>}
+            {fieldState.error && <FieldError errors={[fieldState.error]} id={errorId} />}
+          </Field>
+        )
+      }}
     />
   )
 }
@@ -183,21 +206,31 @@ export function FormInputField<
   containerClassName,
   control,
   description,
+  disabled,
   label,
   name,
   orientation,
   ...props
 }: FormComponentProps<typeof InputGroupInput, TFieldValues, TName, TTransformedValues> & FormContainerFieldProps) {
   return (
-    <FormField control={control} description={description} label={label} name={name} orientation={orientation}>
-      {({ field, fieldState, inputId }) => (
-        <InputGroup className={containerClassName}>
+    <FormField
+      control={control}
+      description={description}
+      disabled={disabled}
+      label={label}
+      name={name}
+      orientation={orientation}
+    >
+      {({ describedBy, disabled: fieldDisabled, field, fieldState, inputId }) => (
+        <InputGroup className={containerClassName} data-disabled={fieldDisabled}>
           <InputGroupInput
+            {...props}
+            {...field}
+            aria-describedby={describedBy}
             aria-invalid={fieldState.invalid}
             autoComplete={autoComplete}
+            disabled={fieldDisabled}
             id={inputId}
-            {...field}
-            {...props}
           />
           {containerChildren}
         </InputGroup>
@@ -213,6 +246,7 @@ export function FormSelectField<
 >({
   control,
   description,
+  disabled,
   groups,
   label,
   name,
@@ -221,16 +255,25 @@ export function FormSelectField<
   ...props
 }: FormComponentProps<typeof SelectTrigger, TFieldValues, TName, TTransformedValues> & FormSelectFieldProps) {
   return (
-    <FormField control={control} description={description} label={label} name={name} orientation={orientation}>
-      {({ field, fieldState, inputId, labelId }) => (
-        <Select name={field.name} onValueChange={field.onChange} value={field.value ?? ''}>
+    <FormField
+      control={control}
+      description={description}
+      disabled={disabled}
+      label={label}
+      name={name}
+      orientation={orientation}
+    >
+      {({ describedBy, disabled: fieldDisabled, field, fieldState, inputId, labelId }) => (
+        <Select disabled={fieldDisabled} name={field.name} onValueChange={field.onChange} value={field.value ?? ''}>
           <SelectTrigger
+            {...props}
+            aria-describedby={describedBy}
             aria-invalid={fieldState.invalid}
             aria-labelledby={labelId}
+            disabled={fieldDisabled}
             id={inputId}
             onBlur={field.onBlur}
             ref={field.ref}
-            {...props}
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
@@ -261,16 +304,31 @@ export function FormTextareaField<
   containerClassName,
   control,
   description,
+  disabled,
   label,
   name,
   orientation,
   ...props
 }: FormComponentProps<typeof InputGroupTextarea, TFieldValues, TName, TTransformedValues> & FormContainerFieldProps) {
   return (
-    <FormField control={control} description={description} label={label} name={name} orientation={orientation}>
-      {({ field, fieldState, inputId }) => (
-        <InputGroup className={containerClassName}>
-          <InputGroupTextarea aria-invalid={fieldState.invalid} id={inputId} {...field} {...props} />
+    <FormField
+      control={control}
+      description={description}
+      disabled={disabled}
+      label={label}
+      name={name}
+      orientation={orientation}
+    >
+      {({ describedBy, disabled: fieldDisabled, field, fieldState, inputId }) => (
+        <InputGroup className={containerClassName} data-disabled={fieldDisabled}>
+          <InputGroupTextarea
+            {...props}
+            {...field}
+            aria-describedby={describedBy}
+            aria-invalid={fieldState.invalid}
+            disabled={fieldDisabled}
+            id={inputId}
+          />
           {containerChildren}
         </InputGroup>
       )}
