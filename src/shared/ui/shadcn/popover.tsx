@@ -43,9 +43,7 @@ function PopoverHeader({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function PopoverTitle({ className, ...props }: React.ComponentProps<'h2'>) {
-  return (
-    <div className={classNames('font-heading text-base font-medium', className)} data-slot="popover-title" {...props} />
-  )
+  return <div className={classNames('text-base font-medium', className)} data-slot="popover-title" {...props} />
 }
 
 function PopoverTrigger({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {

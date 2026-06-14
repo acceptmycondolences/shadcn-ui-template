@@ -47,6 +47,7 @@ export default defineConfig([
     extends: [tseslint.configs.recommended],
     files: ['src/shared/ui/shadcn/**/*.{ts,tsx}'],
     rules: {
+      'react-hooks/set-state-in-effect': 'off',
       'react-refresh/only-export-components': 'off',
     },
   },
