@@ -1,1 +1,1 @@
-export * from '~/pages/not-found/ui/NotFoundPage'
+export { NotFoundPage } from './ui/NotFoundPage'

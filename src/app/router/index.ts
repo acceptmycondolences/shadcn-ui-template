@@ -1,2 +1,1 @@
-export * from '~/app/router/generatedRouteTree'
-export * from '~/app/router/router'
+export { router } from './router'

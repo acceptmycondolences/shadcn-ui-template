@@ -4,23 +4,12 @@ import { IconSelector } from '@tabler/icons-react'
 import { Controller, type FieldPath, type FieldPathByValue, type FieldValues } from 'react-hook-form'
 
 import { classNames } from '~/shared/lib'
+
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../shadcn/command'
+import { Field, FieldDescription, FieldError, FieldLabel } from '../shadcn/field'
+import { InputGroup, InputGroupInput, InputGroupTextarea } from '../shadcn/input-group'
+import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover'
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-  InputGroup,
-  InputGroupInput,
-  InputGroupTextarea,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   Select,
   SelectContent,
   SelectGroup,
@@ -28,12 +17,14 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-  type FormComboboxFieldProps,
-  type FormComponentProps,
-  type FormContainerFieldProps,
-  type FormFieldProps,
-  type FormSelectFieldProps,
-} from '~/shared/ui'
+} from '../shadcn/select'
+import type {
+  FormComboboxFieldProps,
+  FormComponentProps,
+  FormContainerFieldProps,
+  FormFieldProps,
+  FormSelectFieldProps,
+} from './form.props'
 
 export function FormComboboxField<
   TFieldValues extends FieldValues = FieldValues,

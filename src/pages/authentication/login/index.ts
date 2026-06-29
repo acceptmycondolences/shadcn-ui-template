@@ -1,1 +1,1 @@
-export * from '~/pages/authentication/login/ui/LoginPage'
+export { LoginPage } from './ui/LoginPage'

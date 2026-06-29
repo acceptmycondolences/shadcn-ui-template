@@ -1,8 +1,8 @@
 import { createRouter } from '@tanstack/react-router'
 
-import { routeTree } from '~/app/router'
-
 import { NotFoundPage } from '~/pages/not-found'
+
+import { routeTree } from './generatedRouteTree'
 
 export const router = createRouter({
   defaultNotFoundComponent: NotFoundPage,

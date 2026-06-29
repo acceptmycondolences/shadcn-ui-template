@@ -13,7 +13,8 @@
     "fix": "eslint . --fix",
     "lint": "eslint .",
     "check": "tsc -b",
-    "validate": "pnpm format && pnpm fix && pnpm lint && pnpm check",
+    "arch": "steiger ./src",
+    "validate": "pnpm format && pnpm fix && pnpm lint && pnpm check && pnpm arch",
     "dev": "vite --port 3000 --host",
     "build": "tsc -b && vite build",
     "preview": "vite preview --port 3000 --host",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@feature-sliced/steiger-plugin": "^0.6.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "@tailwindcss/vite": "^4.3.1",
     "@tanstack/eslint-plugin-router": "^1.162.0",
@@ -70,6 +72,7 @@
     "lint-staged": "^17.0.7",
     "prettier": "^3.8.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "steiger": "^0.5.13",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12"

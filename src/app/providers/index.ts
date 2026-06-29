@@ -1,1 +1,1 @@
-export * from '~/app/providers/Providers'
+export { Providers } from './Providers'

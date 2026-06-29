@@ -1,1 +1,1 @@
-export * from '~/app/entrypoint/main'
+export * from './main'

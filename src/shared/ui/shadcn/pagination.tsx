@@ -5,10 +5,10 @@ import { IconChevronLeft, IconChevronRight, IconDots } from '@tabler/icons-react
 import { classNames } from '~/shared/lib'
 import { Button } from '~/shared/ui'
 
-type PaginationLinkProps = Pick<React.ComponentProps<typeof Button>, 'size'> & React.ComponentProps<'a'> &
-  {
-  isActive?: boolean
-}
+type PaginationLinkProps = Pick<React.ComponentProps<typeof Button>, 'size'> &
+  React.ComponentProps<'a'> & {
+    isActive?: boolean
+  }
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (

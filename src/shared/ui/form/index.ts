@@ -1,2 +1,1 @@
-export * from '~/shared/ui/form/model/form.props'
-export * from '~/shared/ui/form/ui/Form'
+export { FormComboboxField, FormField, FormInputField, FormSelectField, FormTextareaField } from './Form'

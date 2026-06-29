@@ -1,1 +1,1 @@
-export * from '~/pages/authenticated/home/ui/HomePage'
+export { HomePage } from './ui/HomePage'

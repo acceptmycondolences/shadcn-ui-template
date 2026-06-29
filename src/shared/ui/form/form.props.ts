@@ -11,7 +11,8 @@ import type {
 } from 'react-hook-form'
 
 import type { SelectGroupItem } from '~/shared/lib'
-import type { fieldVariants } from '~/shared/ui'
+
+import type { fieldVariants } from '../shadcn/field'
 
 export type ControlledFieldProp =
   | 'aria-describedby'
